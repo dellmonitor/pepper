@@ -1,0 +1,19 @@
+.fullscreen {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fullscreen canvas {
+	border: 1px black solid;
+	background-color: white;
+	object-fit: contain;
+	max-height: 90%;
+	max-width: 100%;
+}
