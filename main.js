@@ -4,10 +4,28 @@ var Game = {
 	height: 1080,
 };
 
+var Order = {
+	queue: []
+}
+
+var Mouse = {
+	onMouseDown: function(event) {
+		if (event.button == 2) {
+			let screen = Game.canvas.getBoundingClientRect();
+			let order = { x: (event.x - screen.x) * Game.width / screen.width,
+						  y: (event.y - screen.y) * Game.height / screen.height  };
+			if (event.shiftKey) Order.queue.push(order);
+			else Order.queue = [ order ];
+		}
+	}
+}
+
 Game.start = function() {
 	Game.canvas = document.getElementById('game');
 	Game.canvas.width = Game.width;
 	Game.canvas.height = Game.height;
+	Game.canvas.oncontextmenu = () => false;
+	Game.canvas.addEventListener("mousedown", (event) => { Mouse.onMouseDown(event); } );
 
 	Game.context = Game.canvas.getContext('2d');
 
