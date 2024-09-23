@@ -39,9 +39,9 @@ Game.start = function() {
 	Game._onEachFrame(Game.run);
 };
 
-Game.draw = function() {
+Game.draw = function(interpolation) {
 	this.context.clearRect(0, 0, this.width, this.height);
-	this.objects.forEach((object) => object.draw(this.context));
+	this.objects.forEach((object) => object.draw(this.context, interpolation));
 }
 
 Game.update = function() {
@@ -62,7 +62,7 @@ Game.run = (function() {
 			loops++;
 		}
 
-		if (loops) Game.draw();
+		Game.draw((nextGameTick - (new Date).getTime()) / skipTicks);
 	}
 })();
 

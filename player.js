@@ -5,7 +5,7 @@ class Player {
 		this.hitbox = hitbox;
 		this.color = color;
 		this.speed = speed;
-		this.velocity = NaN;
+		this.velocity = { x: 0, y: 0 };
 		this.dist = 0;
 		this.order = NaN;
 	}
@@ -30,9 +30,9 @@ class Player {
 		this.hitbox = new Rectangle(this.x, this.y, this.hitbox.width, this.hitbox.height);
 	}
 
-	draw(context) {
+	draw(context, interpolation) {
 		context.fillStyle = this.color;
-		context.fillRect(this.hitbox.left, this.hitbox.top, this.hitbox.width * 2, this.hitbox.height * 2);
+		context.fillRect(this.hitbox.left - this.velocity.x * interpolation, this.hitbox.top - this.velocity.y * interpolation, this.hitbox.width * 2, this.hitbox.height * 2);
 	}
 
 	setOrder(order) {
