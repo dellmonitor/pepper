@@ -5,7 +5,8 @@ var Game = {
 };
 
 var Order = {
-	queue: []
+	queue: [],
+	immediate: NaN,
 }
 
 var Mouse = {
@@ -15,7 +16,10 @@ var Mouse = {
 			let order = { x: (event.x - screen.x) * Game.width / screen.width,
 						  y: (event.y - screen.y) * Game.height / screen.height  };
 			if (event.shiftKey) Order.queue.push(order);
-			else Order.queue = [ order ];
+			else {
+				Order.queue = [];
+				Order.immediate = order;
+			}
 		}
 	}
 }
@@ -30,13 +34,14 @@ Game.start = function() {
 	Game.context = Game.canvas.getContext('2d');
 
 	Game.objects = [];
+	Game.objects.push(new Player(Game.width / 2, Game.height / 2, new Rectangle(Game.width / 2, Game.height / 2, 16, 16), 'black', 5));
 
 	Game._onEachFrame(Game.run);
 };
 
 Game.draw = function() {
 	this.context.clearRect(0, 0, this.width, this.height);
-	this.objects.forEach((object) => object.draw());
+	this.objects.forEach((object) => object.draw(this.context));
 }
 
 Game.update = function() {
