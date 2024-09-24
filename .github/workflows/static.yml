@@ -1,0 +1,17 @@
+# Simple workflow for deploying static content to server
+name: Deploy static content to server
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["master"]
+    
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Get changes from repository
+        run: |
+          cd ${{ secrets.PROJECT_DIR }}
+          git pull --rebase
