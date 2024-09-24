@@ -14,8 +14,8 @@ var Screen;
 var Mouse = {
 	onMouseDown: function(event) {
 		if (! Game.pause && event.button == 2) {
-			let order = { x: Mouse.x,
-						  y: Mouse.y };
+			let order = { x: (event.x - Screen.x) * Game.width / Screen.width,
+										y: (event.y - Screen.y) * Game.height / Screen.height };
 			if (event.shiftKey) Order.queue.push(order);
 			else {
 				Order.queue = [];
@@ -23,8 +23,6 @@ var Mouse = {
 			}
 		}
 	},
-	x: 0,
-	y: 0,
 }
 
 Game.start = function() {
@@ -46,8 +44,6 @@ Game.start = function() {
 
 	window.addEventListener('keydown', (event) => { if (event.key === 'Escape') Game.togglePause() });
 	window.addEventListener('resize', (event) => { Screen = Game.canvas.getBoundingClientRect(); });
-	window.addEventListener('mousemove', (event) => { Mouse.x = (event.x - Screen.x) * Game.width / Screen.width;
-													  Mouse.y = (event.y - Screen.y) * Game.width / Screen.width; });
 
 	Game._onEachFrame(Game.run);
 };
