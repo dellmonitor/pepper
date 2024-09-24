@@ -9,19 +9,22 @@ var Order = {
 	immediate: NaN,
 }
 
+var Screen;
+
 var Mouse = {
 	onMouseDown: function(event) {
 		if (! Game.pause && event.button == 2) {
-			let screen = Game.canvas.getBoundingClientRect();
-			let order = { x: (event.x - screen.x) * Game.width / screen.width,
-						  y: (event.y - screen.y) * Game.height / screen.height  };
+			let order = { x: Mouse.x,
+						  y: Mouse.y };
 			if (event.shiftKey) Order.queue.push(order);
 			else {
 				Order.queue = [];
 				Order.immediate = order;
 			}
 		}
-	}
+	},
+	x: 0,
+	y: 0,
 }
 
 Game.start = function() {
@@ -30,6 +33,7 @@ Game.start = function() {
 	Game.canvas.height = Game.height;
 	Game.canvas.oncontextmenu = () => false;
 	Game.canvas.addEventListener("mousedown", (event) => { Mouse.onMouseDown(event); } );
+	Screen = Game.canvas.getBoundingClientRect();
 
 	Game.context = Game.canvas.getContext('2d');
 
@@ -41,6 +45,9 @@ Game.start = function() {
 	Game.objects.push(new Player(Game.width / 2, Game.height / 2, new Rectangle(Game.width / 2, Game.height / 2, 16, 16), 'black', 5));
 
 	window.addEventListener('keydown', (event) => { if (event.key === 'Escape') Game.togglePause() });
+	window.addEventListener('resize', (event) => { Screen = Game.canvas.getBoundingClientRect(); });
+	window.addEventListener('mousemove', (event) => { Mouse.x = (event.x - Screen.x) * Game.width / Screen.width;
+													  Mouse.y = (event.y - Screen.y) * Game.width / Screen.width; });
 
 	Game._onEachFrame(Game.run);
 };
