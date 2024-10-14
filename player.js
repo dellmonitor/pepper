@@ -44,6 +44,11 @@ class Player {
 		this.velocity = { x: dx * ratio, y: dy * ratio };
 	}
 
+	clearOrder() {
+		this.order = NaN;
+		this.velocity = { x: 0, y: 0 };
+	}
+
 	close() {
 		return (Math.sqrt(Math.pow(this.x - this.order.x, 2) + Math.pow(this.y - this.order.y, 2)) < this.speed);
 	}
