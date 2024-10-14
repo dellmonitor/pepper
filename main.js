@@ -37,8 +37,7 @@ var Key = {
 		}
 	},
 	onKeyDown: function(event) {
-		this._pressed[event.key].action();
-		console.log(event.key);
+		if (! Game.pause) this._pressed[event.key].action();
 	},
 }
 
