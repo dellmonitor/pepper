@@ -11,19 +11,54 @@ var Order = {
 
 var Screen;
 
+var Camera = {
+	isMoving: false,
+	x: 0,
+	y: 0,
+	x0: 0,
+	y0: 0,
+	sx: 0,
+	sy: 0,
+	dx: 0,
+	dy: 0
+};
+
 var Mouse = {
 	onMouseDown: function(event) {
 		if (! Game.pause && event.button == 2) {
 			let order = {
-				x: (event.x - Screen.x) * Game.width / Screen.width,
-				y: (event.y - Screen.y) * Game.height / Screen.height };
+				x: (event.x - Screen.x) * Game.width / Screen.width + Camera.x,
+				y: (event.y - Screen.y) * Game.height / Screen.height + Camera.y
+			};
 			if (event.shiftKey) Order.queue.push(order);
 			else {
 				Order.queue = [];
 				Order.immediate = order;
 			}
 		}
+		if (event.button == 1) {
+			Camera.isMoving = true;
+			Camera.sx = (event.x - Screen.x) * Game.width / Screen.width;
+			Camera.sy = (event.y - Screen.y) * Game.height / Screen.height;
+		}
 	},
+	onMouseUp: function(event) {
+		if (event.button == 1) {
+			Camera.isMoving = false;
+			Camera.x0 = Camera.x;
+			Camera.y0 = Camera.y;
+		}
+	},
+	onMouseMove: function(event) {
+		this.x = (event.x - Screen.x) * Game.width / Screen.width;
+		this.y = (event.y - Screen.y) * Game.height / Screen.height;
+		if (Camera.isMoving) {
+			Camera.dx = (event.x - Screen.x) * Game.width / Screen.width - Camera.sx;
+			Camera.dy = (event.y - Screen.y) * Game.height / Screen.height - Camera.sy;
+			Camera.x = Camera.x0 - Camera.dx;
+			Camera.y = Camera.y0 - Camera.dy;
+		}
+	}
 }
 
 var Key = {
@@ -37,7 +72,7 @@ var Key = {
 		}
 	},
 	onKeyDown: function(event) {
-		if (! Game.pause) this._pressed[event.key].action();
+		if (! Game.pause && this._pressed.hasOwnProperty(event.key)) this._pressed[event.key].action();
 	},
 }
 
@@ -47,6 +82,8 @@ Game.start = function() {
 	Game.canvas.height = Game.height;
 	Game.canvas.oncontextmenu = () => false;
 	Game.canvas.addEventListener("mousedown", (event) => { Mouse.onMouseDown(event); } );
+	Game.canvas.addEventListener("mouseup", (event) => { Mouse.onMouseUp(event); } );
+	Game.canvas.addEventListener("mousemove", (event) => { Mouse.onMouseMove(event); } );
 	Screen = Game.canvas.getBoundingClientRect();
 
 	Game.context = Game.canvas.getContext('2d');

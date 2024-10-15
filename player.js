@@ -32,7 +32,12 @@ class Player {
 
 	draw(context, interpolation) {
 		context.fillStyle = this.color;
-		context.fillRect(this.hitbox.left - this.velocity.x * interpolation, this.hitbox.top - this.velocity.y * interpolation, this.hitbox.width * 2, this.hitbox.height * 2);
+		context.fillRect(
+			- Camera.x + this.hitbox.left - this.velocity.x * interpolation,
+			- Camera.y + this.hitbox.top - this.velocity.y * interpolation,
+			this.hitbox.width * 2,
+			this.hitbox.height * 2
+		);
 	}
 
 	setOrder(order) {
